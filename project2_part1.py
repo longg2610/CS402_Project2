@@ -1,8 +1,11 @@
 import random
 import time
 import matplotlib.pyplot as plt
-random.seed(36)
+random.seed(36)     # good seed good plant ¯\_(ツ)_/¯
 
+# Extended Euclidean Algorithm
+# Input: ints a and b
+# Output: int g = gcd(a,b), and ints x and y such that ax+by=g
 def egcd(a, b):
     if b == 0:
         return (a, 1, 0)
@@ -11,7 +14,7 @@ def egcd(a, b):
     y = x1 - (a // b) * y1
     return (g, x, y)
 
-# pad to blksz
+# Pad bit string to blksz
 # Input: bit string to be padded, block size to align (512 for plaintext, 1024 for ciphertext)
 # Output: 0-padded bit string
 def pad(bstr, blksz):
@@ -24,9 +27,9 @@ def pad(bstr, blksz):
     assert len(bstr) % blksz == 0
     return bstr
 
-# convert an int to a string of bit, padded to multiple of blksz
+# Convert an int to a string of bit, padded to multiples of blksz
 # Input: integer n
-# Output: n in bit representation, padded to multiple of blksz
+# Output: n in bit representation, padded to multiples of blksz
 def to_bit_str(n, blksz):
     bit_str = bin(n)[2:]
     bit_str = pad(bit_str, blksz)
@@ -34,7 +37,7 @@ def to_bit_str(n, blksz):
     assert n == int(bit_str, 2)     # make sure int and str match
     return bit_str
 
-# basic RSA encryption
+# Basic RSA encryption
 # Input: bit string M as plaintext, public keys (e,n)
 # Output: bit string C as ciphertext
 def Enc(M, e, n):
@@ -49,7 +52,7 @@ def Enc(M, e, n):
     return C              
 
 
-# basic RSA decryption
+# Basic RSA decryption
 # Input: bit string C as ciphertext, private keys (d,n)
 # Output: bit string M as plaintext
 def Dec(C, d, n):
@@ -62,7 +65,7 @@ def Dec(C, d, n):
     M = to_bit_str(M_int, 512)  # 512-bit blocks plaintext
     return M 
 
-# block RSA encryption
+# Block RSA encryption
 # Input: bit string M as plaintext, public keys (e,n)
 # Output: bit string C as ciphertext
 def BlockEnc(M, e, n):
@@ -74,7 +77,7 @@ def BlockEnc(M, e, n):
     assert len(ciphertext) % 1024 == 0          # ciphertext is 1024-bit blocks
     return ciphertext
 
-# block RSA decryption
+# Block RSA decryption
 # Input: bit string C as ciphertext, private keys (d,n)
 # Output: bit string M as plaintext
 def BlockDec(C, d, n):
@@ -112,7 +115,7 @@ def RSA_runtime_plot(n, e, d):
         (1 << 1022),    # 1023 bits (largest safe power-of-two)
 
         # messages >= n
-        # (1 << 1024),   # 1025 bits        # runtime for this is super low
+        # (1 << 1024),   # 1025 bits        
         (1 << 1100),   # 1101 bits
         (1 << 10000),     # 10001 bits
         (1 << 100000),    # 100001 bits
@@ -147,7 +150,7 @@ def RSA_runtime_plot(n, e, d):
     plt.title("Runtime of different Message Sizes")
     plt.grid(True)
     plt.savefig("rsa.png")
-
+    print("Please find plot in rsa.png")
 
 def main():
     # 512 bit ~ 156 digit primes
@@ -162,15 +165,14 @@ def main():
     totient = (p-1)*(q-1)
     e = 65537
     assert totient % e != 0         # make sure e is relatively prime to Φ(n)
-    g, x, y = egcd(e, totient)
+    g, x, y = egcd(e, totient)  # extended Euclidean algorithm to find d
     assert g == 1
-    d = x % totient         # extended Euclidean algorithm to find d
-    assert (d*e)% totient == 1
-    print("d bit length:", d.bit_length())
-    print("d sign:", "negative" if d < 0 else "non-negative")
-    print("inverse check:", (d * e) % totient)    # tests
-    # RSA_test_basic(n, e, d)
-    # RSA_test_block(n, e, d)
+    d = x % totient         
+    assert (d*e) % totient == 1
+
+    # tests
+    RSA_test_basic(n, e, d)
+    RSA_test_block(n, e, d)
     
     # benchmarks
     RSA_runtime_plot(n, e, d)

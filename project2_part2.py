@@ -6,11 +6,11 @@ import statistics
 import matplotlib.pyplot as plt
 from typing import List
 
-import project2_part1 as rsa  # <-- keep RSA imported from Part 1
+import project2_part1 as rsa  # keep RSA imported from Part 1
 
 
 # =============================================================================
-# AES-128 (CTR) — full implementation here (no import aes)
+# AES-128 (CTR) — full implementation
 # =============================================================================
 
 S_BOX = [
@@ -170,7 +170,7 @@ def aes_ctr_encrypt(plaintext: bytes, round_keys: List[List[List[int]]], iv: int
 
 
 # =============================================================================
-# Benchmarking: RSA vs AES (uses your RSA message sizes)
+# Benchmarking: RSA vs AES (uses RSA message sizes from part1)
 # =============================================================================
 MESSAGE_SIZES_BITS = [1, 100, 1000, 1023, 1101, 10001, 100001, 500001, 1000001]
 TRIALS = 15
@@ -212,7 +212,7 @@ def aes_one_run(size_bytes: int, round_keys) -> None:
 def main():
     random.seed(36)
 
-    # -------- RSA keys (same primes as your Part 1) --------
+    # -------- RSA keys (same primes as Part 1) --------
     p = 11768486830057115166813708216419442819789630026552521364390215824122667879499012152966055405964064840134670273335351322307427959816163285539415855392398931
     q = 10656505317395185867599269878343987961437910002658889862534577592970648171805867453126335163669579383121665841978424950866051175731196949476850342375818713
     n = p * q
