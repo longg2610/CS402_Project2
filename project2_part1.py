@@ -1,9 +1,15 @@
-from egcd import egcd
 import random
 import time
 import matplotlib.pyplot as plt
 random.seed(36)
 
+def egcd(a, b):
+    if b == 0:
+        return (a, 1, 0)
+    g, x1, y1 = egcd(b, a % b)
+    x = y1
+    y = x1 - (a // b) * y1
+    return (g, x, y)
 
 # pad to blksz
 # Input: bit string to be padded, block size to align (512 for plaintext, 1024 for ciphertext)
@@ -156,9 +162,13 @@ def main():
     totient = (p-1)*(q-1)
     e = 65537
     assert totient % e != 0         # make sure e is relatively prime to Φ(n)
-    d = egcd(totient, e)[2]         # extended Euclidean algorithm to find d
-
-    # tests
+    g, x, y = egcd(e, totient)
+    assert g == 1
+    d = x % totient         # extended Euclidean algorithm to find d
+    assert (d*e)% totient == 1
+    print("d bit length:", d.bit_length())
+    print("d sign:", "negative" if d < 0 else "non-negative")
+    print("inverse check:", (d * e) % totient)    # tests
     # RSA_test_basic(n, e, d)
     # RSA_test_block(n, e, d)
     
