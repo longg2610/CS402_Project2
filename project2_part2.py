@@ -172,7 +172,7 @@ def aes_ctr_encrypt(plaintext: bytes, round_keys: List[List[List[int]]], iv: int
 # =============================================================================
 # Benchmarking: RSA vs AES (uses RSA message sizes from part1)
 # =============================================================================
-MESSAGE_SIZES_BITS = [1, 100, 1000, 1023, 1101, 10001, 100001, 500001, 1000001]
+MESSAGE_SIZES_BITS = [1, 100, 1000, 1023, 1101, 10001, 100001, 250001, 500001, 750001, 1000001]
 TRIALS = 15
 
 def bits_to_bytes_len(bits: int) -> int:
